@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardBody, CardHeader, Input, Button } from "@nextui-org/react";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
 import { useAuth } from "../auth/AuthContext";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
 
@@ -23,6 +25,8 @@ export default function Login() {
       setError("Invalid credentials");
     }
   };
+
+  const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -43,10 +47,23 @@ export default function Login() {
             />
             <Input
               label="Password"
-              type="password"
               value={password}
+              type={isPasswordVisible ? "text" : "password"}
               onChange={(e) => setPassword(e.target.value)}
               isRequired
+              endContent={
+                <button
+                  className="focus:outline-none"
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                >
+                  {isPasswordVisible ? (
+                    <EyeSlashIcon className="w-4 h-4 text-gray-400" />
+                  ) : (
+                    <EyeIcon className="w-4 h-4 text-gray-400" />
+                  )}
+                </button>
+              }
             />
             <Button
               type="submit"
